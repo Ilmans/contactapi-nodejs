@@ -1,7 +1,11 @@
 import { prismaClient } from "../application/database.js";
 import { logger } from "../application/logging.js";
 import { ResponseError } from "../errors/responError.js";
-import { registerUserValidation } from "../validations/userValidation.js";
+import {v4 as uuid} from "uuid"
+import {
+  loginUserValidation,
+  registerUserValidation,
+} from "../validations/userValidation.js";
 import { validate } from "../validations/validation.js";
 import bcrypt from "bcrypt";
 
@@ -14,7 +18,7 @@ const register = async (request) => {
   });
 
   if (foundUser > 0) {
-   throw new ResponseError(400,"Username already exists!")
+    throw new ResponseError(400, "Username already exists!");
   }
   return await prismaClient.user.create({
     data: { ...user, password: bcrypt.hashSync(user.password, 10) },
@@ -23,9 +27,40 @@ const register = async (request) => {
       name: true,
     },
   });
- 
+};
+
+const login = async (request) => {
+  const loginRequest = validate(loginUserValidation, request);
+
+  const user = await prismaClient.user.findUnique({
+    where: {
+      username: loginRequest.username,
+    },
+    select: {
+      username: true,
+      password: true,
+    },
+  });
+  
+
+  if (!user || !bcrypt.compareSync(loginRequest.password, user.password)) {
+    throw new ResponseError(401, "Invalid credentials!");
+  }
+  const token = uuid().toString();
+  return await prismaClient.user.update({
+    data : {
+      token : token
+    },
+    where : {
+      username : user.username
+    },
+    select : {
+      token : true
+    }
+  })
 };
 
 export default {
-  register
-}
+  register,
+  login,
+};

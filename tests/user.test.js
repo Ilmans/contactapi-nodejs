@@ -1,16 +1,10 @@
 import supertest from "supertest"
 import { web } from "../src/application/web.js"
-import { prismaClient } from "../src/application/database.js"
+import testUtil from "./test-util.js";
 import { logger } from "../src/application/logging.js";
 describe("POST /api/users",() => {
 
-  afterEach(async () => {
-    await prismaClient.user.deleteMany({
-      where : {
-        username : "menzcreate"
-      }
-    })
-  })
+  afterEach(testUtil.removeTestUser);
 
   it("should reject register cause empty field", async () => {
     const result = await supertest(web).post("/api/users").send({
@@ -54,4 +48,32 @@ describe("POST /api/users",() => {
   
   });
   
+})
+
+describe("POST /api/users/login",() => {
+  beforeEach(testUtil.createUserTest);
+  afterEach(testUtil.removeTestUser);
+
+  it("should can be login",async () => {
+    const result = await supertest(web).post("/api/users/login").send({
+      username : "menzcreate",
+      password : "rahasia"
+    })
+   
+  logger.info(result.body)
+    expect(result.status).toBe(200)
+    expect(result.body.data.token).toBeDefined();
+    expect(result.body.data.token).not.toBe("test");  
+
+  })
+
+  it("should can't be login",async () => {
+       const result = await supertest(web).post("/api/users/login").send({
+         username: "menzcreate",
+         password: "rahasiaasdf",
+       });
+
+       expect(result.status).toBe(401);
+       expect(result.body.errors).toBeDefined()
+  })
 })
