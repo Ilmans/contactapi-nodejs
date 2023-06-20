@@ -77,3 +77,15 @@ describe("POST /api/users/login",() => {
        expect(result.body.errors).toBeDefined()
   })
 })
+
+describe("GET /api/users/current",() => {
+    beforeEach(testUtil.createUserTest);
+    afterEach(testUtil.removeTestUser);
+    it("should can get current user",async () => {
+      const result = await supertest(web).get("/api/users/current").set("Authorization","test")
+
+      expect(result.status).toBe(200)
+      expect(result.body.data.username).toBe("menzcreate")
+      expect(result.body.data.name).toBe("Ilman S")
+    })
+})
