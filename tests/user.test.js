@@ -88,4 +88,10 @@ describe("GET /api/users/current",() => {
       expect(result.body.data.username).toBe("menzcreate")
       expect(result.body.data.name).toBe("Ilman S")
     })
+    it("should rejet if token login is invalid",async () => {
+      const result = await supertest(web).get("/api/users/current").set("Authorization","asdfasd")
+
+      expect(result.status).toBe(401)
+      expect(result.body.errors).toBeDefined()
+    })
 })
