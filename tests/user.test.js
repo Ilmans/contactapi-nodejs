@@ -10,17 +10,15 @@ describe("POST /api/users",() => {
       }
     })
   })
-  it("should can register new user",async () => {
+  it("should reject if request invalid",async () => {
      const result = await supertest(web)
       .post("/api/users").send({
-        username : "menzcreate",
-        password : "rahasia",
-        name : "Ilman s"
+        username : "",
+        password : "",
+        name : ""
       })
 
-      expect(result.status).toBe(200)
-      expect(result.body.data.username).toBe("menzcreate")
-      expect(result.body.data.name).toBe("Ilman s")
-      expect(result.body.data.password).toBeUndefined();
+      expect(result.status).toBe(400)
+      expect(result.body.errors).toBeDefined();
   })
 })

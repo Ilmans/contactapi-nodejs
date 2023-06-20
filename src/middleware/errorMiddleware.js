@@ -1,5 +1,4 @@
 import { ResponseError } from "../errors/responError.js"
-import  ValidationError from "joi"
 
 const errorMiddleware =  async (err,req,res,next) => {
   if(!err) {
@@ -10,11 +9,7 @@ const errorMiddleware =  async (err,req,res,next) => {
       res.status(err.status).json({
         errors : err.message
       }).end()
-    } else if (err instanceof ValidationError) {
-      res.status(400).json({
-        errors : err.message
-      })
-    } else {
+    }  else {
       res.status(500).json({
         errors : err.message
       })
