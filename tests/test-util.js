@@ -20,7 +20,16 @@ const createUserTest = async () => {
 };
 
 const getUserTest = async () => {
-  return prismaClient.user.findUnique({
+  return await prismaClient.user.findUnique({
+    where: {
+      username: "menzcreate",
+    },
+  });
+};
+
+
+const removeAllTestContacts = async () => {
+  await prismaClient.contact.deleteMany({
     where: {
       username: "menzcreate",
     },
@@ -31,4 +40,5 @@ export default {
   removeTestUser,
   createUserTest,
   getUserTest,
+  removeAllTestContacts,
 };
