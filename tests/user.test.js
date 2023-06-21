@@ -148,3 +148,26 @@ describe("PETCH /api/users/current", () => {
   });
 });
 
+describe("DELETE /api/users/logout", () => {
+  beforeEach(testUtil.createUserTest);
+  afterEach(testUtil.removeTestUser);
+  it("should can be logout", async () => {
+    const result = await supertest(web)
+      .delete("/api/users/logout")
+      .set("Authorization", "test");
+    expect(result.status).toBe(200);
+    expect(result.body.data).toBe("OK");
+
+    const user = await testUtil.getUserTest();
+
+    expect(user.token).toBeNull();
+  });
+
+  it("should reject logout if token is invalid", async () => {
+    const result = await supertest(web)
+      .delete("/api/users/logout")
+      .set("Authorization", "salah");
+    expect(result.status).toBe(401);
+  });
+});
+
