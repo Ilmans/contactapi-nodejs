@@ -6,6 +6,7 @@ import {
   getUserValidation,
   loginUserValidation,
   registerUserValidation,
+  updateUserValidation,
 } from "../validations/userValidation.js";
 import { validate } from "../validations/validation.js";
 import bcrypt from "bcrypt";
@@ -80,8 +81,36 @@ const getUser = async (username) => {
   return user;
 };
 
+const update = async (request) => {
+  const user = validate(updateUserValidation,request)
+  const findUser = await prismaClient.user.count({
+    where : {
+      username : user.username
+    }
+  })
+  if(findUser < 1) {
+    throw new ResponseError(404,"User doesn't found")
+  }
+  const data = {
+    name : user.name ?? undefined,
+    password : user.password ? bcrypt.hashSync(user.password,10) : undefined
+  };
+  return await prismaClient.user.update({
+    where : {
+      username : user.username
+    },
+    data : data,
+    select : {
+      username : true,
+      name : true
+    }
+  })
+  
+}
+
 export default {
   register,
   login,
+  update,
   getUser,
 };

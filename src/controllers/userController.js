@@ -32,9 +32,24 @@ const get = async (req,res,next) => {
       next(error)
   }
 }
+const update = async (req,res,next) => {
+  try {
+    
+    const request = req.body;
+    request.username = req.user.username;
+    const result = await userService.update(request)
+    res.status(200).json({
+      data : result
+    })
+  } catch (error) {
+      next(error)
+  }
+
+}
 
 export default {
   register,
   login,
-  get
+  get,
+  update
 };
