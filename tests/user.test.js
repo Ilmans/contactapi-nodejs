@@ -1,21 +1,12 @@
 import supertest from "supertest"
 import { web } from "../src/application/web.js"
 import testUtil from "./test-util.js";
-import { logger } from "../src/application/logging.js";
 import bcrypt from "bcrypt";
 describe("POST /api/users", () => {
-  afterEach(testUtil.removeTestUser);
-
-  it("should reject register cause empty field", async () => {
-    const result = await supertest(web).post("/api/users").send({
-      username: "",
-      password: "",
-      name: "",
-    });
-
-    expect(result.status).toBe(400);
-    expect(result.body.errors).toBeUndefined;
+  afterEach(async () => {
+    await testUtil.removeTestUser();
   });
+
   it("should can register new user", async () => {
     let result = await supertest(web).post("/api/users").send({
       username: "menzcreate",
@@ -27,6 +18,16 @@ describe("POST /api/users", () => {
     expect(result.body.data.username).toBe("menzcreate");
     expect(result.body.data.name).toBe("Ilman s");
     expect(result.body.data.password).toBeUndefined();
+  });
+  it("should reject register cause empty field", async () => {
+    const result = await supertest(web).post("/api/users").send({
+      username: "",
+      password: "",
+      name: "",
+    });
+
+    expect(result.status).toBe(400);
+    expect(result.body.errors).toBeUndefined;
   });
   it("should reject register because duplicate user", async () => {
     let result = await supertest(web).post("/api/users").send({
@@ -47,8 +48,12 @@ describe("POST /api/users", () => {
 });
 
 describe("POST /api/users/login", () => {
-  beforeEach(testUtil.createUserTest);
-  afterEach(testUtil.removeTestUser);
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+  });
+  afterEach(async () => {
+    await testUtil.removeTestUser();
+  });
 
   it("should can be login", async () => {
     const result = await supertest(web).post("/api/users/login").send({
@@ -73,8 +78,12 @@ describe("POST /api/users/login", () => {
 });
 
 describe("GET /api/users/current", () => {
-  beforeEach(testUtil.createUserTest);
-  afterEach(testUtil.removeTestUser);
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+  });
+  afterEach(async () => {
+    await testUtil.removeTestUser();
+  });
   it("should can get current user", async () => {
     const result = await supertest(web)
       .get("/api/users/current")
@@ -95,8 +104,12 @@ describe("GET /api/users/current", () => {
 });
 
 describe("PETCH /api/users/current", () => {
-  beforeEach(testUtil.createUserTest);
-  afterEach(testUtil.removeTestUser);
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+  });
+  afterEach(async () => {
+    await testUtil.removeTestUser();
+  });
   it("should can update user", async () => {
     const result = await supertest(web)
       .patch("/api/users/current")
@@ -143,14 +156,18 @@ describe("PETCH /api/users/current", () => {
       .patch("/api/users/current")
       .set("Authorization", "salah")
       .send({});
-      expect(result.status).toBe(401);
-      expect(result.body.errors).toBeDefined()
+    expect(result.status).toBe(401);
+    expect(result.body.errors).toBeDefined();
   });
 });
 
 describe("DELETE /api/users/logout", () => {
-  beforeEach(testUtil.createUserTest);
-  afterEach(testUtil.removeTestUser);
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+  });
+  afterEach(async () => {
+    await testUtil.removeTestUser();
+  });
   it("should can be logout", async () => {
     const result = await supertest(web)
       .delete("/api/users/logout")
@@ -170,4 +187,6 @@ describe("DELETE /api/users/logout", () => {
     expect(result.status).toBe(401);
   });
 });
+
+
 

@@ -13,6 +13,7 @@ import bcrypt from "bcrypt";
 
 const register = async (request) => {
   const user = validate(registerUserValidation, request);
+ 
   const foundUser = await prismaClient.user.count({
     where: {
       username: user.username,
