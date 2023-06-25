@@ -39,4 +39,15 @@ const update = async (req, res, next) => {
   }
 };
 
-export default { create, get,update };
+const remove = async (req, res, next) => {
+  try {
+    await contactService.remove(req.user, req.params.contactId);
+    res.status(200).json({
+      data: "OK",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { create, get, update, remove };

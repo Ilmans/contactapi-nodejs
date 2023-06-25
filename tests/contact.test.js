@@ -140,3 +140,33 @@ describe("PUT /api/contacts/:contactId", () => {
     expect(result.status).toBe(404);
   });
 });
+describe("DELETE /api/contacts/:contactId", () => {
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+    await testUtil.createTestContact();
+  });
+  afterEach(async () => {
+    await testUtil.removeAllTestContacts();
+    await testUtil.removeTestUser();
+  });
+
+  it("Should can DELETE existing contact", async () => {
+    let testContact = await testUtil.getTestContact();
+    const result = await supertest(web)
+      .delete("/api/contacts/" + testContact.id)
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data).toBe("OK");
+    testContact = await testUtil.getTestContact();
+    expect(testContact).toBeNull;
+  });
+  it("Should reject Delete contact", async () => {
+    const testContact = await testUtil.getTestContact();
+    const result = await supertest(web)
+      .put("/api/contacts/" + (testContact.id + 1))
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(404);
+  });
+});
