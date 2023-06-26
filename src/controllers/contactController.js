@@ -1,4 +1,4 @@
-import contactService from "../services/contactService";
+import contactService from "../services/contactService.js";
 
 const create = async (req, res, next) => {
   try {
