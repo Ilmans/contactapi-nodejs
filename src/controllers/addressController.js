@@ -13,4 +13,17 @@ const create = async (req, res, next) => {
     next(error);
   }
 };
-export default { create };
+
+const get = async (req, res, next) => {
+  try {
+    const result = await addressService.get(
+      req.user,
+      req.params.contactId,
+      req.params.adressId
+    );
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+export default { create, get };
