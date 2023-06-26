@@ -76,3 +76,52 @@ describe("GET /api/contacts/:contactId/adresses/:adressId", () => {
     expect(result.status).toBe(404);
   });
 });
+
+describe("PUT /api/contacts/:contactId/addresses/:addressId", () => {
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+    await testUtil.createTestContact();
+    await testUtil.createTestAddress();
+  });
+  afterEach(async () => {
+    await testUtil.removeAllTestAddresses();
+    await testUtil.removeAllTestContacts();
+    await testUtil.removeTestUser();
+  });
+
+  it("Should can update address", async () => {
+    const testContact = await testUtil.getTestContact();
+    const testAddress = await testUtil.getTestAddress();
+    const result = await supertest(web)
+      .put(`/api/contacts/${testContact.id}/addresses/${testAddress.id}`)
+      .set("Authorization", "test")
+      .send({
+        street: "Jalan testupdate",
+        city: "City testupdate",
+        province: "Province testupdate",
+        country: "Indonesiaa",
+        postal_code: "166401",
+      });
+    expect(result.status).toBe(200);
+    expect(result.body.data.id).toBe(testAddress.id);
+    expect(result.body.data.street).toBe("Jalan testupdate");
+    expect(result.body.data.city).toBe("City testupdate");
+    expect(result.body.data.province).toBe("Province testupdate");
+    expect(result.body.data.country).toBe("Indonesiaa");
+    expect(result.body.data.postal_code).toBe("166401");
+  });
+  it("Should reject update address because wrong validation", async () => {
+    const testContact = await testUtil.getTestContact();
+    const testAddress = await testUtil.getTestAddress();
+    const result = await supertest(web)
+      .put(`/api/contacts/${testContact.id}/addresses/${testAddress.id}`)
+      .set("Authorization", "test")
+      .send({
+        street: "Jalan testupdate",
+        city: "City testupdate",
+        province: "Province testupdate",
+        postal_code: "166401",
+      });
+    expect(result.status).toBe(400);
+  });
+});

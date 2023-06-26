@@ -39,7 +39,7 @@ Respond Body Error :
 ```
 
 ## Update address API
-Endpoint : PUT /api/contacts/:contactId/:addressId 
+Endpoint : PUT /api/contacts/:contactId/addresses/:addressId 
 
 Headers :
 - authorization : token
