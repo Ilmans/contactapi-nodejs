@@ -50,4 +50,13 @@ const remove = async (req, res, next) => {
   }
 };
 
-export default { create, get, update, remove };
+const search = async (req, res, next) => {
+  try {
+    const result = await contactService.search(req.user, req.query);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { create, get, update, remove, search };
