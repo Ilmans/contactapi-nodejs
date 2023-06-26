@@ -41,4 +41,17 @@ const update = async (req, res, next) => {
     next(error);
   }
 };
-export default { create, get, update };
+const remove = async (req, res, next) => {
+  try {
+    const result = await addressService.remove(
+      req.user,
+      req.params.contactId,
+      req.params.addressId
+    );
+    res.status(200).json({ data: "OK" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { create, get, update, remove };

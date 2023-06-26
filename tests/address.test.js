@@ -125,3 +125,30 @@ describe("PUT /api/contacts/:contactId/addresses/:addressId", () => {
     expect(result.status).toBe(400);
   });
 });
+describe("DELETE /api/contacts/:contactId/addresses/:addressId", () => {
+  beforeEach(async () => {
+    await testUtil.createUserTest();
+    await testUtil.createTestContact();
+    await testUtil.createTestAddress();
+  });
+  afterEach(async () => {
+    await testUtil.removeAllTestAddresses();
+    await testUtil.removeAllTestContacts();
+    await testUtil.removeTestUser();
+  });
+
+  it("Should can delete address", async () => {
+    const testContact = await testUtil.getTestContact();
+    let testAddress = await testUtil.getTestAddress();
+  
+    const result = await supertest(web)
+      .delete(
+        "/api/contacts/" + testContact.id + "/addresses/" + testAddress.id
+      )
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    testAddress = await testUtil.getTestAddress();
+    expect(testAddress).toBeNull();
+  });
+});
