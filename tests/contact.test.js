@@ -162,9 +162,10 @@ describe("DELETE /api/contacts/:contactId", () => {
     expect(testContact).toBeNull;
   });
   it("Should reject Delete contact", async () => {
-    const testContact = await testUtil.getTestContact();
+    const contactt = await testUtil.getTestContact();
+
     const result = await supertest(web)
-      .put("/api/contacts/" + (testContact.id + 1))
+      .delete("/api/contacts/" + (contactt.id + 2))
       .set("Authorization", "test");
 
     expect(result.status).toBe(404);

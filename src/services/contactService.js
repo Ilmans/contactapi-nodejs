@@ -53,6 +53,7 @@ const update = async (user, request) => {
       id: contact.id,
     },
   });
+
   if (totalContact < 1) throw new ResponseError(404, "Contact doesn't found");
   return prismaClient.contact.update({
     where: {
