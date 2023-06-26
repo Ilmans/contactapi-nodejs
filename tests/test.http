@@ -1,0 +1,108 @@
+POST  http://localhost:3004/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "menzcreate",
+  "password" : "rahasia",
+  "name" : "Ilman s"
+}
+
+###LOGIN
+POST  http://localhost:3004/api/users/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "menzcreate",
+  "password" : "rahasia"
+}
+
+### GET CURRENT USER
+GET  http://localhost:3004/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+### UPDATE CURRENT USER
+PATCH   http://localhost:3004/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+{
+  "name" : "Ilman Sunanuddin"
+}
+
+### LOGOUT
+DELETE    http://localhost:3004/api/users/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+### Crete contact
+
+POST http://localhost:3004/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+{
+  "first_name" : "Ciprut",
+  "last_name" : "AA",
+  "email" : "ciprut@gmail.com",
+  "phone" : "23423423"
+}
+### get contacts & search
+
+GET http://localhost:3004/api/contacts?page=1&size=2
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+### GET SINGLE CONTACT BY ID
+
+GET http://localhost:3004/api/contacts/1417
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+### UPDATE CONTACT BY ID
+
+PUT http://localhost:3004/api/contacts/1417
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+{
+
+    "first_name": "Ijmal2",
+    "last_name": "Ramdan22",
+    "email": "Ijmalramdan@gmail.com",
+    "phone": "534534534"
+  }
+
+### REMOVE CONTACT
+
+DELETE  http://localhost:3004/api/contacts/1417
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+### create addraess
+
+POST http://localhost:3004/api/contacts/1418/addresses
+Content-Type: application/json
+Accept: application/json
+Authorization: bffae8cc-156d-4d65-b61b-4f18910fbf06
+
+{
+  "street" : "Jl blm jadi",
+  "city" : "Bandung",
+  "province" : "Jawa barat",
+  "country" : "Indonesia",
+  "postal_code" : "16649"
+}
+
+
+
